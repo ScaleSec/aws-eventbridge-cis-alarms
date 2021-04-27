@@ -11,6 +11,8 @@ Note that in Terraform the aws_cloudwatch_event resource is used. This is identi
 
 
 
+
+Filter examples
 ## Filters
 
 # AWS Config Changes (config.amazonaws.com)
