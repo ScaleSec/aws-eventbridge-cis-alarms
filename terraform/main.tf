@@ -191,12 +191,10 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-3" {
   "detail-type": ["AWS Console Sign In via CloudTrail"],
   "detail": {
     "userIdentity": {
-      "type": ["Root"]
-    },
-    "userIdentity": {
+      "type": ["Root"],
       "invokedBy": [ { "exists": false } ]
     },
-    "eventType": ["AwsServiceEvent", "AwsConsoleSignIn"]
+    "eventType": [{ "anything-but": "AwsServiceEvent"}]
   }
 }
 EOF
@@ -232,7 +230,7 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-4" {
       "PutRolePolicy",
       "PutUserPolicy",
       "CreatePolicy",
-      "DeleteRolePolicy",
+      "DeletePolicy",
       "CreatePolicyVersion",
       "DeletePolicyVersion",
       "AttachRolePolicy",
@@ -429,7 +427,7 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-10" {
 
   event_pattern = <<EOF
 {
-  "source": ["aws.vpc"],
+  "source": ["aws.ec2"],
   "detail-type": ["AWS API Call via CloudTrail"],
   "detail": {
     "eventSource": ["ec2.amazonaws.com"],
@@ -464,10 +462,10 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-11" {
 
   event_pattern = <<EOF
 {
-  "source": ["aws.vpc"],
+  "source": ["aws.ec2"],
   "detail-type": ["AWS API Call via CloudTrail"],
   "detail": {
-    "eventSource": ["cloudtrail.amazonaws.com"],
+    "eventSource": ["ec2.amazonaws.com"],
     "eventName": [
       "CreateNetworkAcl",
       "CreateNetworkAclEntry",
@@ -499,10 +497,10 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-12" {
 
   event_pattern = <<EOF
 {
-  "source": ["aws.vpc"],
+  "source": ["aws.ec2"],
   "detail-type": ["AWS API Call via CloudTrail"],
   "detail": {
-    "eventSource": ["cloudtrail.amazonaws.com"],
+    "eventSource": ["ec2.amazonaws.com"],
     "eventName": [
       "CreateCustomerGateway",
       "DeleteCustomerGateway",
@@ -534,10 +532,10 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-13" {
 
   event_pattern = <<EOF
 {
-  "source": ["aws.vpc"],
+  "source": ["aws.ec2"],
   "detail-type": ["AWS API Call via CloudTrail"],
   "detail": {
-    "eventSource": ["cloudtrail.amazonaws.com"],
+    "eventSource": ["ec2.amazonaws.com"],
     "eventName": [
       "CreateRoute",
       "CreateRouteTable",
@@ -570,7 +568,7 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-14" {
 
   event_pattern = <<EOF
 {
-  "source": ["aws.vpc"],
+  "source": ["aws.ec2"],
   "detail-type": ["AWS API Call via CloudTrail"],
   "detail": {
     "eventSource": ["ec2.amazonaws.com"],

@@ -15,4 +15,5 @@
 
 ## Validate Functionality
 * To validate the events are working you should subscribe your email to the CIS-Alerts topic created. This will allow you to receive an email whenever events are triggered. Once verified you can unsubscribe.
+* You can verify the rules were created by viewing the EventBridge console. There should be 14 rules all starting with CIS-Alert
 * Once deployed you can stop logging for an existing CloudTrail trail. The event should be triggered and the remediation lambda will re-enable the trail.

@@ -41,12 +41,10 @@ Below are each of the 14 filters that are applied to the Eventbridge rules. They
       "detail-type": ["AWS Console Sign In via CloudTrail"],
       "detail": {
         "userIdentity": {
-          "type": ["Root"]
-        },
-        "userIdentity": {
+          "type": ["Root"],
           "invokedBy": [ { "exists": false } ]
         },
-        "eventType": ["AwsServiceEvent", "AwsConsoleSignIn"]
+        "eventType": [{ "anything-but": "AwsServiceEvent"}]
       }
     }
 
@@ -64,7 +62,7 @@ Below are each of the 14 filters that are applied to the Eventbridge rules. They
           "PutRolePolicy",
           "PutUserPolicy",
           "CreatePolicy",
-          "DeleteRolePolicy",
+          "DeletePolicy",
           "CreatePolicyVersion",
           "DeletePolicyVersion",
           "AttachRolePolicy",
@@ -153,7 +151,7 @@ Below are each of the 14 filters that are applied to the Eventbridge rules. They
 
 ### 3.10 Security Group Changes
     {
-      "source": ["aws.vpc"],
+      "source": ["aws.ec2"],
       "detail-type": ["AWS API Call via CloudTrail"],
       "detail": {
         "eventSource": ["ec2.amazonaws.com"],
@@ -170,10 +168,10 @@ Below are each of the 14 filters that are applied to the Eventbridge rules. They
 
 ### 3.11 NACL Changes
     {
-      "source": ["aws.vpc"],
+      "source": ["aws.ec2"],
       "detail-type": ["AWS API Call via CloudTrail"],
       "detail": {
-        "eventSource": ["cloudtrail.amazonaws.com"],
+        "eventSource": ["ec2.amazonaws.com"],
         "eventName": [
           "CreateNetworkAcl",
           "CreateNetworkAclEntry",
@@ -187,10 +185,10 @@ Below are each of the 14 filters that are applied to the Eventbridge rules. They
 
 ### 3.12 Network Gateway changes
     {
-      "source": ["aws.vpc"],
+      "source": ["aws.ec2"],
       "detail-type": ["AWS API Call via CloudTrail"],
       "detail": {
-        "eventSource": ["cloudtrail.amazonaws.com"],
+        "eventSource": ["ec2.amazonaws.com"],
         "eventName": [
           "CreateCustomerGateway",
           "DeleteCustomerGateway",
@@ -204,7 +202,7 @@ Below are each of the 14 filters that are applied to the Eventbridge rules. They
 
 ### 3.13 RouteTable Changes
     {
-      "source": ["aws.vpc"],
+      "source": ["aws.ec2"],
       "detail-type": ["AWS API Call via CloudTrail"],
       "detail": {
         "eventSource": ["ec2.amazonaws.com"],
@@ -222,7 +220,7 @@ Below are each of the 14 filters that are applied to the Eventbridge rules. They
 
 ### 3.14 VPC Change Filter
     {
-      "source": ["aws.vpc"],
+      "source": ["aws.ec2"],
       "detail-type": ["AWS API Call via CloudTrail"],
       "detail": {
         "eventSource": ["ec2.amazonaws.com"],
