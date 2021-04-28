@@ -129,7 +129,7 @@ resource "aws_lambda_permission" "allow_eventbridge_invoke" {
 }
 
 # Eventbridge rules and target configuration
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-1" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-1" {
   name        = "CIS-Alert-Unauthorized-API-Calls"
   description = "Respond to Unauthorized API Calls"
 
@@ -137,52 +137,59 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-1" {
 {
   "source": ["aws.cloudtrail"],
   "detail-type": ["AWS API Call via CloudTrail"],
-  "errorCode": ["AccessDenied", "UnauthorizedOperation"]
+  "errorCode": ["AccessDenied", "*UnauthorizedOperation"]
 }
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-1" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-1.name
+resource "aws_cloudwatch_event_target" "sns-4-1" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-1.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-1" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-1.name
+resource "aws_cloudwatch_event_target" "lambda-4-1" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-1.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-2" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-2" {
   name        = "CIS-Alert-Sign-In-Without-MFA"
   description = "Respond to Console login without MFA"
 
   event_pattern = <<EOF
-{
-  "detail-type": ["AWS Console Sign In via CloudTrail"],
-  "detail": {
-    "additionalEventData": {
-      "MFAUsed": ["No"]
+    {
+      "detail-type": ["AWS Console Sign In via CloudTrail"],
+      "detail": {
+        "eventName": ["ConsoleLogin"],
+        "userIdentity": {
+          "type": ["IAMUser"]
+        },
+        "additionalEventData": {
+          "MFAUsed": [{ "anything-but": "Yes"}]
+        },
+        "responseElements": {
+          "ConsoleLogin": ["Success"]
+        }
+      }
     }
-  }
-}
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-2" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-2.name
+resource "aws_cloudwatch_event_target" "sns-4-2" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-2.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-2" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-2.name
+resource "aws_cloudwatch_event_target" "lambda-4-2" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-2.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-3" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-3" {
   name        = "CIS-Alert-Root-Account-Usage"
   description = "Respond to Root Account Usage"
 
@@ -200,19 +207,19 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-3" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-3" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-3.name
+resource "aws_cloudwatch_event_target" "sns-4-3" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-3.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-3" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-3.name
+resource "aws_cloudwatch_event_target" "lambda-4-3" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-3.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-4" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-4" {
   name        = "CIS-Alert-IAM-Policy-Changes"
   description = "Respond to IAM Policy Changes"
 
@@ -245,19 +252,19 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-4" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-4" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-4.name
+resource "aws_cloudwatch_event_target" "sns-4-4" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-4.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-4" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-4.name
+resource "aws_cloudwatch_event_target" "lambda-4-4" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-4.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-5" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-5" {
   name        = "CIS-Alert-Cloudtrail-Changes"
   description = "Respond to Cloudtrail Changes"
 
@@ -279,19 +286,19 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-5" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-5" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-5.name
+resource "aws_cloudwatch_event_target" "sns-4-5" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-5.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-5" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-5.name
+resource "aws_cloudwatch_event_target" "lambda-4-5" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-5.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-6" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-6" {
   name        = "CIS-Alert-Console-Login-Failures"
   description = "Respond to Console Login Failures"
 
@@ -307,19 +314,19 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-6" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-6" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-6.name
+resource "aws_cloudwatch_event_target" "sns-4-6" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-6.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-6" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-6.name
+resource "aws_cloudwatch_event_target" "lambda-4-6" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-6.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-7" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-7" {
   name        = "CIS-Alert-KMS-CMK-Deletions"
   description = "Respond to KMS CMK Deletion Actions"
 
@@ -338,19 +345,19 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-7" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-7" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-7.name
+resource "aws_cloudwatch_event_target" "sns-4-7" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-7.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-7" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-7.name
+resource "aws_cloudwatch_event_target" "lambda-4-7" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-7.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-8" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-8" {
   name        = "CIS-Alert-S3-Bucket-Policy-Changes"
   description = "Respond to S3 Bucket Policy Changes"
 
@@ -376,19 +383,19 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-8" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-8" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-8.name
+resource "aws_cloudwatch_event_target" "sns-4-8" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-8.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-8" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-8.name
+resource "aws_cloudwatch_event_target" "lambda-4-8" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-8.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-9" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-9" {
   name        = "CIS-Alert-AWSConfig-Changes"
   description = "Respond to AWS Config Service Changes"
 
@@ -409,19 +416,19 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-9" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-9" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-9.name
+resource "aws_cloudwatch_event_target" "sns-4-9" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-9.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-9" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-9.name
+resource "aws_cloudwatch_event_target" "lambda-4-9" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-9.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-10" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-10" {
   name        = "CIS-Alert-Security-Group-Changes"
   description = "Respond to Security Group Changes"
 
@@ -444,19 +451,19 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-10" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-10" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-10.name
+resource "aws_cloudwatch_event_target" "sns-4-10" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-10.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-10" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-10.name
+resource "aws_cloudwatch_event_target" "lambda-4-10" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-10.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-11" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-11" {
   name        = "CIS-Alert-NACL-Changes"
   description = "Respond to NACL Changes"
 
@@ -479,19 +486,19 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-11" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-11" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-11.name
+resource "aws_cloudwatch_event_target" "sns-4-11" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-11.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-11" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-11.name
+resource "aws_cloudwatch_event_target" "lambda-4-11" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-11.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-12" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-12" {
   name        = "CIS-Alert-Network-Gateway-Changes"
   description = "Respond to Network Gateway Changes"
 
@@ -514,19 +521,19 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-12" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-12" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-12.name
+resource "aws_cloudwatch_event_target" "sns-4-12" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-12.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-12" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-12.name
+resource "aws_cloudwatch_event_target" "lambda-4-12" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-12.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-13" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-13" {
   name        = "CIS-Alert-Route-Table-Changes"
   description = "Respond to VPC Route Table Changes"
 
@@ -550,19 +557,19 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-13" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-13" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-13.name
+resource "aws_cloudwatch_event_target" "sns-4-13" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-13.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-13" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-13.name
+resource "aws_cloudwatch_event_target" "lambda-4-13" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-13.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }
 
-resource "aws_cloudwatch_event_rule" "CIS-Alert-3-14" {
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-14" {
   name        = "CIS-Alert-VPC-Changes"
   description = "Respond to VPC Changes"
 
@@ -590,14 +597,61 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-3-14" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns-3-14" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-14.name
+resource "aws_cloudwatch_event_target" "sns-4-14" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-14.name
   target_id = "SendToSNS"
   arn       = aws_sns_topic.cis-notifications.arn
 }
 
-resource "aws_cloudwatch_event_target" "lambda-3-14" {
-  rule      = aws_cloudwatch_event_rule.CIS-Alert-3-14.name
+resource "aws_cloudwatch_event_target" "lambda-4-14" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-14.name
+  target_id = "SendToLambda"
+  arn       = aws_lambda_function.remediation_lambda.arn
+}
+
+resource "aws_cloudwatch_event_rule" "CIS-Alert-4-15" {
+  name        = "CIS-Alert-Organizations-Changes"
+  description = "Respond to AWS Organizations Changes"
+
+  event_pattern = <<EOF
+{
+  "source": ["aws.organizations"],
+  "detail-type": ["AWS API Call via CloudTrail"],
+  "detail": {
+    "eventSource": ["organizations.amazonaws.com"],
+    "eventName": [
+      "AcceptHandshake",
+      "AttachPolicy",
+      "CreateAccount",
+      "CreateOrganizationalUnit",
+      "CreatePolicy",
+      "DeclineHandshake",
+      "DeleteOrganization",
+      "DeleteOrganizationalUnit",
+      "DeletePolicy",
+      "DetachPolicy",
+      "DisablePolicyType",
+      "EnablePolicyType",
+      "InviteAccountToOrganization",
+      "LeaveOrganization",
+      "MoveAccount",
+      "RemoveAccountFromOrganization",
+      "UpdatePolicy",
+      "UpdateOrganizationalUnit"
+    ]
+  }
+}
+EOF
+}
+
+resource "aws_cloudwatch_event_target" "sns-4-15" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-15.name
+  target_id = "SendToSNS"
+  arn       = aws_sns_topic.cis-notifications.arn
+}
+
+resource "aws_cloudwatch_event_target" "lambda-4-15" {
+  rule      = aws_cloudwatch_event_rule.CIS-Alert-4-15.name
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation_lambda.arn
 }

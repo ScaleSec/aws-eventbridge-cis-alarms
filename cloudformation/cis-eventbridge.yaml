@@ -92,7 +92,7 @@ Resources:
       Principal: 'events.amazonaws.com'
 
   # Eventbridge rules and target configuration
-  RuleCISAlert31:
+  RuleCISAlert41:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-Unauthorized-API-Calls'
@@ -101,7 +101,7 @@ Resources:
         {
           "source": ["aws.cloudtrail"],
           "detail-type": ["AWS API Call via CloudTrail"],
-          "errorCode": ["AccessDenied", "UnauthorizedOperation"]
+          "errorCode": ["AccessDenied", "*UnauthorizedOperation"]
         }
       Targets: 
         - 
@@ -111,7 +111,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'
 
-  RuleCISAlert32:
+  RuleCISAlert42:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-Sign-In-Without-MFA'
@@ -120,8 +120,15 @@ Resources:
         {
           "detail-type": ["AWS Console Sign In via CloudTrail"],
           "detail": {
+            "eventName": ["ConsoleLogin"],
+            "userIdentity": {
+              "type": ["IAMUser"]
+            },
             "additionalEventData": {
-              "MFAUsed": ["No"]
+              "MFAUsed": [{ "anything-but": "Yes"}]
+            },
+            "responseElements": {
+              "ConsoleLogin": ["Success"]
             }
           }
         }
@@ -133,7 +140,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'
  
-  RuleCISAlert33:
+  RuleCISAlert43:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-Root-Account-Usage'
@@ -157,7 +164,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'    
 
-  RuleCISAlert34:
+  RuleCISAlert44:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-IAM-Policy-Changes'
@@ -196,7 +203,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'   
 
-  RuleCISAlert35:
+  RuleCISAlert45:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-Cloudtrail-Changes'
@@ -224,7 +231,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'
 
-  RuleCISAlert36:
+  RuleCISAlert46:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-Console-Login-Failures'
@@ -246,7 +253,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'
 
-  RuleCISAlert37:
+  RuleCISAlert47:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-KMS-CMK-Deletions'
@@ -271,7 +278,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'
 
-  RuleCISAlert38:
+  RuleCISAlert48:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-S3-Bucket-Policy-Changes'
@@ -303,7 +310,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'
 
-  RuleCISAlert39:
+  RuleCISAlert49:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-AWSConfig-Changes'
@@ -330,7 +337,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'
 
-  RuleCISAlert310:
+  RuleCISAlert410:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-Security-Group-Changes'
@@ -359,7 +366,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'
 
-  RuleCISAlert311:
+  RuleCISAlert411:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-NACL-Changes'
@@ -388,7 +395,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'
 
-  RuleCISAlert312:
+  RuleCISAlert412:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-Network-Gateway-Changes'
@@ -417,7 +424,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'
 
-  RuleCISAlert313:
+  RuleCISAlert413:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-Route-Table-Changes'
@@ -447,7 +454,7 @@ Resources:
           Arn: !Ref CISAlertSNSTopic
           Id: 'SendToSNS'
 
-  RuleCISAlert314:
+  RuleCISAlert414:
     Type: AWS::Events::Rule
     Properties: 
       Name: 'CIS-Alert-VPC-Changes'
@@ -470,6 +477,47 @@ Resources:
               "DetachClassicLinkVpc",
               "DisableVpcClassicLink",
               "EnableVpcClassicLink"
+            ]
+          }
+        }
+      Targets: 
+        - 
+          Arn: !GetAtt RemediationLambda.Arn
+          Id: 'SendToLambda'
+        -
+          Arn: !Ref CISAlertSNSTopic
+          Id: 'SendToSNS'
+
+  RuleCISAlert415:
+    Type: AWS::Events::Rule
+    Properties: 
+      Name: 'CIS-Alert-Organizations-Changes'
+      Description: 'Respond to AWS Organizations Changes'
+      EventPattern: 
+        {
+          "source": ["aws.organizations"],
+          "detail-type": ["AWS API Call via CloudTrail"],
+          "detail": {
+            "eventSource": ["organizations.amazonaws.com"],
+            "eventName": [
+              "AcceptHandshake",
+              "AttachPolicy",
+              "CreateAccount",
+              "CreateOrganizationalUnit",
+              "CreatePolicy",
+              "DeclineHandshake",
+              "DeleteOrganization",
+              "DeleteOrganizationalUnit",
+              "DeletePolicy",
+              "DetachPolicy",
+              "DisablePolicyType",
+              "EnablePolicyType",
+              "InviteAccountToOrganization",
+              "LeaveOrganization",
+              "MoveAccount",
+              "RemoveAccountFromOrganization",
+              "UpdatePolicy",
+              "UpdateOrganizationalUnit"
             ]
           }
         }
