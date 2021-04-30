@@ -29,3 +29,5 @@ override.tf.json
 # example: *tfplan*
 
 cloudformation/packaged-template.json
+terrform/.terraform
+terraform/.terraform.lock.hcl
