@@ -9,7 +9,7 @@
 ## Usage Instructions
 1. Setup your local credentials and verify you are deploying into the appropriate account. You can confirm by running `aws sts get-caller-identity`
 3. Navigate in to the cloudformation directory
-2. We must first create the lambda package and upload the package to S3. Run `aws cloudformation package --template-file cis-eventbridge.yaml --s3-bucket desired_s3_bucket --output-template-file packaged-template.json` replacing desired_s3_bucket with the bucket to upload the lambda package too. This will also create an updated cloudformation template called packaged-template.json. This is the template we will use to deploy.
+2. We must first create the lambda package and upload the package to S3. Run `aws cloudformation package --template-file cis-eventbridge.yaml --s3-bucket desired_s3_bucket --output-template-file packaged-template.json` replacing desired_s3_bucket with the bucket to upload the lambda package to. This will also create an updated cloudformation template called packaged-template.json. This is the template we will use to deploy.
 3. Deploy the code by running `aws cloudformation deploy --template-file packaged-template.json --stack-name eventbridge-alerts --capabilities CAPABILITY_NAMED_IAM`
 
 
