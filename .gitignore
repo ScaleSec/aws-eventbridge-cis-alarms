@@ -31,3 +31,4 @@ override.tf.json
 cloudformation/packaged-template.json
 terrform/.terraform
 terraform/.terraform.lock.hcl
+terraform/lambda.zip

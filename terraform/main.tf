@@ -108,7 +108,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment_execute" {
 
 data "archive_file" "lambda_archive" {
   type        = "zip"
-  source_file = "${path.module}/src/remediate.py"
+  source_file = "../lambda-src/remediate.py"
   output_path = "${path.module}/lambda.zip"
 }
 
