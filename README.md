@@ -12,7 +12,7 @@ When one of the Eventbridge rules are triggered it will forward the event to an 
 
 The Lambda function performs a sample remediation for CloudTrail events. Any additional remediation actions will need to be created still.
 
-Note that these templates are for example purposes only and the notifications and lambda remediation are not flushed out enough for immediate use in a production environment. Re recommend using the example lamdba code to expand on potential remediation options depending on event type. 
+Note that these templates are for example purposes only and the notifications and lambda remediation are not flushed out enough for immediate use in a production environment. We recommend using the example lamdba code to expand on potential remediation options depending on event type. 
 
 
 ## Event Pattern Filters
