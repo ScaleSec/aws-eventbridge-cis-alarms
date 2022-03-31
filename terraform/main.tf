@@ -135,9 +135,10 @@ resource "aws_cloudwatch_event_rule" "CIS-Alert-4-1" {
 
   event_pattern = <<EOF
 {
-  "source": ["aws.cloudtrail"],
   "detail-type": ["AWS API Call via CloudTrail"],
-  "errorCode": ["AccessDenied", "*UnauthorizedOperation"]
+  "detail": {
+    "errorCode": ["AccessDenied*", "*UnauthorizedOperation"]
+  }
 }
 EOF
 }
