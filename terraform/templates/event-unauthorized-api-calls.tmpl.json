@@ -1,0 +1,12 @@
+{
+    "source": [
+        "aws.cloudtrail"
+    ],
+    "detail-type": [
+        "AWS API Call via CloudTrail"
+    ],
+    "errorCode": [
+        "AccessDenied*",
+        "*UnauthorizedOperation"
+    ]
+}

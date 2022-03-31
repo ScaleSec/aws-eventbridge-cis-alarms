@@ -1,0 +1,15 @@
+{
+    "source": [
+        "aws.signin"
+    ],
+    "detail-type": [
+        "AWS Console Sign In via CloudTrail"
+    ],
+    "detail": {
+        "responseElements": {
+            "ConsoleLogin": [
+                "Failure"
+            ]
+        }
+    }
+}
