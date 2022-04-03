@@ -20,10 +20,11 @@ Below are each of the 15 filters that are applied to the Eventbridge rules. They
 
 ### 4.1 Unauthorized API calls
     {
-      "source": ["aws.cloudtrail"],
-      "detail-type": ["AWS API Call via CloudTrail"],
-      "errorCode": ["AccessDenied", "*UnauthorizedOperation"]
+    "detail-type": ["AWS API Call via CloudTrail"],
+    "detail": {
+        "errorCode": ["AccessDenied*", "*UnauthorizedOperation"]
     }
+
 
 ### 4.2 Console Login without MFA
     {
