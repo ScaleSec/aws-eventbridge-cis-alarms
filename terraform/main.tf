@@ -134,3 +134,4 @@ resource "aws_cloudwatch_event_target" "lambda" {
   target_id = "SendToLambda"
   arn       = aws_lambda_function.remediation.arn
 }
+
