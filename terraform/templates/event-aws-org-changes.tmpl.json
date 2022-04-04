@@ -1,0 +1,33 @@
+{
+    "source": [
+        "aws.organizations"
+    ],
+    "detail-type": [
+        "AWS API Call via CloudTrail"
+    ],
+    "detail": {
+        "eventSource": [
+            "organizations.amazonaws.com"
+        ],
+        "eventName": [
+            "AcceptHandshake",
+            "AttachPolicy",
+            "CreateAccount",
+            "CreateOrganizationalUnit",
+            "CreatePolicy",
+            "DeclineHandshake",
+            "DeleteOrganization",
+            "DeleteOrganizationalUnit",
+            "DeletePolicy",
+            "DetachPolicy",
+            "DisablePolicyType",
+            "EnablePolicyType",
+            "InviteAccountToOrganization",
+            "LeaveOrganization",
+            "MoveAccount",
+            "RemoveAccountFromOrganization",
+            "UpdatePolicy",
+            "UpdateOrganizationalUnit"
+        ]
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "source": [
+        "aws.config"
+    ],
+    "detail-type": [
+        "AWS API Call via CloudTrail"
+    ],
+    "detail": {
+        "eventSource": [
+            "config.amazonaws.com"
+        ],
+        "eventName": [
+            "StopConfigurationRecorder",
+            "DeleteDeliveryChannel",
+            "PutDeliveryChannel",
+            "PutConfigurationRecorder"
+        ]
+    }
+}

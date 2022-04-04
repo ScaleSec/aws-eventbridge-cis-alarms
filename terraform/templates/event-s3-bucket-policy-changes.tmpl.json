@@ -1,0 +1,24 @@
+{
+    "source": [
+        "aws.s3"
+    ],
+    "detail-type": [
+        "AWS API Call via CloudTrail"
+    ],
+    "detail": {
+        "eventSource": [
+            "s3.amazonaws.com"
+        ],
+        "eventName": [
+            "PutBucketAcl",
+            "PutBucketPolicy",
+            "PutBucketCors",
+            "PutBucketLifecycle",
+            "PutBucketReplication",
+            "DeleteBucketPolicy",
+            "DeleteBucketCors",
+            "DeleteBucketLifecycle",
+            "DeleteBucketReplication"
+        ]
+    }
+}
